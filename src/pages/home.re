@@ -1,9 +1,9 @@
 [@bs.module] external gql : ReasonApolloTypes.gql = "graphql-tag";
 
 /* Describe the result type */
-type episode = {. id: string, title: string};
+type episode = {. "id": string, "title": string};
 
-type data = {. episode: episode};
+type data = {. "episode": episode};
 
 /* Write graphql query */
 let query =
