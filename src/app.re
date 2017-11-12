@@ -14,7 +14,7 @@ let make = (_children) => {
     ReasonReact.element(
       BrowserRouter.make([|
         ReasonReact.cloneElement(
-          <div className="App">
+          <div>
             <Header />
             <Switch>
               <Route path="/" exact=true component=renderHome />

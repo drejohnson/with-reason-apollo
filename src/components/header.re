@@ -8,7 +8,7 @@ let make = (_children) => {
   ...component,
   render: (_self) =>
     <header>
-      <Image source=logo width=300 height=60 resizeMode=Contain backgroundColor="white" />
+      <Image source=logo width=80 height=80 resizeMode=Contain backgroundColor="white" />
       <Navigation />
     </header>
 };

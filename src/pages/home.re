@@ -39,11 +39,12 @@ let make = (_) => {
       <Hello message="Hello from home component" />
       <FetchEpisode>
         (
-          (response) => {
-            Js.log(response);
-            let title = response##loading ? "" : response##data##episode##title;
-            <div> (text(title)) </div>
-          }
+          (response) =>
+            response##loading ?
+              <div> (ReasonReact.stringToElement("Loading")) </div> :
+              <div>
+                <Episode key=response##data##episode##id title=response##data##episode##title />
+              </div>
         )
       </FetchEpisode>
     </View>
