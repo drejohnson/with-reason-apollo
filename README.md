@@ -9,4 +9,4 @@
 - [x] [React Router v4](https://reacttraining.com/react-router/api) bindings
 
 **TODO**
-- [] Use [ReReactPrimitives](https://github.com/bloodyowl/reReactPrimitives)
+- Use [ReReactPrimitives](https://github.com/bloodyowl/reReactPrimitives)
