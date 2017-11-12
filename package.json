@@ -12,7 +12,7 @@
     "react-apollo": "^2.0.0",
     "react-dom": "^16.0.0",
     "react-router-dom": "^4.2.2",
-    "reason-apollo": "https://github.com/drejohnson/reason-apollo.git",
+    "reason-apollo": "0.3.0",
     "reason-scripts": "0.7.0"
   },
   "scripts": {
