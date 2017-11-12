@@ -19,7 +19,7 @@ let make = (_children) => {
             <Switch>
               <Route path="/" exact=true component=renderHome />
               <Route path="/about" component=renderAbout />
-              <Route component=renderHome />
+              <Route component=renderNotFound />
             </Switch>
           </div>,
           ~props=Js.Obj.empty(),
