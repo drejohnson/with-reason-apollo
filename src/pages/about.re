@@ -16,10 +16,10 @@ let query =
   }
  |});
 
-/* Pass the above information to the Apollo Client */
+/* Pass the return type of the query to a module containing a type named `responseType` */
 module Config = {
   type responseType = data;
-  let query = query;
+  type variables;
 };
 
 /* You can now use it as a JSX call */
@@ -29,12 +29,12 @@ let text = ReasonReact.stringToElement;
 
 let component = ReasonReact.statelessComponent("About");
 
-let make = (_) => {
+let make = (_children) => {
   ...component,
   render: (_self) =>
     <View>
       <Hello message="Hello from about component" />
-      <FetchEpisodes>
+      <FetchEpisodes query>
         (
           (response) =>
             response##loading ?
@@ -43,7 +43,7 @@ let make = (_) => {
                 (
                   ReasonReact.arrayToElement(
                     Array.map(
-                      (episode) => <Episode key=episode##id title=episode##title />,
+                      (episode) => <Episode key=episode##id id=episode##id title=episode##title />,
                       response##data##allEpisodes
                     )
                   )
