@@ -1,15 +1,3 @@
-[@bs.module "react-router-dom"] external browserRouter : ReasonReact.reactClass = "BrowserRouter";
-
-[@bs.module "react-router-dom"] external _switch : ReasonReact.reactClass = "Switch";
-
-[@bs.module "react-router-dom"] external navLink : ReasonReact.reactClass = "NavLink";
-
-[@bs.module "react-router-dom"] external redirect : ReasonReact.reactClass = "Redirect";
-
-[@bs.module "react-router-dom"] external router : ReasonReact.reactClass = "Router";
-
-[@bs.module "react-router-dom"] external route : ReasonReact.reactClass = "Route";
-
 [@bs.send] external toString : string => string = "toString"; /* Hack for glamor returning an object */
 
 type renderFunc =
@@ -28,21 +16,36 @@ let optionToBool = (optional) =>
   };
 
 module Router = {
+  [@bs.module "react-router-dom"] external router : ReasonReact.reactClass = "Router";
   let make = (children) =>
     ReasonReact.wrapJsForReason(~reactClass=router, ~props=Js.Obj.empty(), children);
 };
 
 module BrowserRouter = {
+  [@bs.module "react-router-dom"] external browserRouter : ReasonReact.reactClass =
+    "BrowserRouter";
   let make = (children) =>
     ReasonReact.wrapJsForReason(~reactClass=browserRouter, ~props=Js.Obj.empty(), children);
 };
 
+module ServerRouter = {
+  [@bs.module "react-router"] external staticRouter : ReasonReact.reactClass = "StaticRouter";
+  let make = (~context: Js.Json.t, ~location: Js.Json.t, children) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=staticRouter,
+      ~props={"context": context, "location": location},
+      children
+    );
+};
+
 module Switch = {
+  [@bs.module "react-router-dom"] external _switch : ReasonReact.reactClass = "Switch";
   let make = (children) =>
     ReasonReact.wrapJsForReason(~reactClass=_switch, ~props=Js.Obj.empty(), children);
 };
 
 module NavLink = {
+  [@bs.module "react-router-dom"] external navLink : ReasonReact.reactClass = "NavLink";
   let make =
       (
         ~_to: string,
@@ -56,7 +59,7 @@ module NavLink = {
       ~reactClass=navLink,
       ~props={
         "to": _to,
-        "innerRef": Js.Null_undefined.from_opt(innerRef),
+        "innerRef": Js.Nullable.from_opt(innerRef),
         "className":
           switch className {
           | Some(name) => toString(name)
@@ -67,24 +70,25 @@ module NavLink = {
           | Some(name) => toString(name)
           | None => ""
           },
-        "onClick": Js.Null_undefined.from_opt(onClick)
+        "onClick": Js.Nullable.from_opt(onClick)
       },
       children
     );
 };
 
 module Redirect = {
+  [@bs.module "react-router-dom"] external redirect : ReasonReact.reactClass = "Redirect";
   let make = (~_to: string, ~from: option(string)=?, children) =>
     ReasonReact.wrapJsForReason(
       ~reactClass=redirect,
-      ~props={"to": _to, "from": Js.Null_undefined.from_opt(from)},
+      ~props={"to": _to, "from": Js.Nullable.from_opt(from)},
       children
     );
 };
 
 module Route = {
+  [@bs.module "react-router-dom"] external route : ReasonReact.reactClass = "Route";
   let make =
-      /* ::componentMake */
       (
         ~component: option(('a => ReasonReact.reactElement))=?,
         ~exact: option(bool)=?,
@@ -96,9 +100,9 @@ module Route = {
       ~reactClass=route,
       ~props={
         "exact": Js.Boolean.to_js_boolean(optionToBool(exact)),
-        "path": Js.Null_undefined.from_opt(path),
-        "component": Js.Null_undefined.from_opt(component),
-        "render": Js.Null_undefined.from_opt(render)
+        "path": Js.Nullable.from_opt(path),
+        "component": Js.Nullable.from_opt(component),
+        "render": Js.Nullable.from_opt(render)
       },
       children
     );

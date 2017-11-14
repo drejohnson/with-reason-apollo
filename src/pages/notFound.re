@@ -2,9 +2,7 @@ let text = ReasonReact.stringToElement;
 
 let component = ReasonReact.statelessComponent("NotFound");
 
-Js.log(component);
-
-let make = (_) => {
+let make = (_children) => {
   ...component,
   render: (_self) => <View> <Hello message="Sorry page not found" /> </View>
 };

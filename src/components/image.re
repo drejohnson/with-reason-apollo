@@ -8,17 +8,7 @@ type resizeMode =
   | Contain
   | Actual;
 
-let make =
-    (
-      ~source,
-      ~resizeMode,
-      ~width,
-      ~height,
-      ~backgroundColor,
-      ~round=false,
-      /* ~alternativeText=?, */
-      _children
-    ) => {
+let make = (~source, ~resizeMode, ~width, ~height, ~backgroundColor, ~round=false, _children) => {
   ...component,
   initialState: (_) => {isReady: false},
   reducer: ((), _state) => ReasonReact.NoUpdate,
@@ -43,11 +33,5 @@ let make =
           ()
         )
       )
-      /* (
-           switch alternativeText {
-           | Some(text) => <ScreenReaderContent text />
-           | None => ReasonReact.nullElement
-           }
-         ) */
     />
 };
