@@ -10,8 +10,8 @@ let query =
   [@bs]
   gql(
     {|
-    query episode {
-      episode: Episode (id: "cixm6eovajibk0180k40rcoja") {
+    query episode($id: ID) {
+      episode: Episode (id: $id) {
         id
         title
       }
@@ -19,10 +19,12 @@ let query =
   |}
   );
 
+let variables = {"id": "cixm6eovajibk0180k40rcoja"};
+
 /* Pass the above information to the Apollo Client */
 module Config = {
   type responseType = data;
-  let query = query;
+  type variables = {. "id": string};
 };
 
 /* You can now use it as a JSX call */
@@ -32,18 +34,22 @@ let text = ReasonReact.stringToElement;
 
 let component = ReasonReact.statelessComponent("Home");
 
-let make = (_) => {
+let make = (_children) => {
   ...component,
   render: (_self) =>
     <View>
       <Hello message="Hello from home component" />
-      <FetchEpisode>
+      <FetchEpisode query variables>
         (
           (response) =>
             response##loading ?
               <div> (ReasonReact.stringToElement("Loading")) </div> :
               <div>
-                <Episode key=response##data##episode##id title=response##data##episode##title />
+                <Episode
+                  key=response##data##episode##id
+                  id=response##data##episode##id
+                  title=response##data##episode##title
+                />
               </div>
         )
       </FetchEpisode>
