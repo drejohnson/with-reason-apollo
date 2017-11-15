@@ -15,6 +15,28 @@ let optionToBool = (optional) =>
   | _ => false
   };
 
+module Route = {
+  [@bs.module "react-router-dom"] external route : ReasonReact.reactClass = "Route";
+  let make =
+      (
+        ~component: option(('a => ReasonReact.reactElement))=?,
+        ~exact: option(bool)=?,
+        ~path: option(string)=?,
+        ~render: option(renderFunc)=?,
+        children
+      ) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=route,
+      ~props={
+        "exact": Js.Boolean.to_js_boolean(optionToBool(exact)),
+        "path": Js.Nullable.from_opt(path),
+        "component": Js.Nullable.from_opt(component),
+        "render": Js.Nullable.from_opt(render)
+      },
+      children
+    );
+};
+
 module Router = {
   [@bs.module "react-router-dom"] external router : ReasonReact.reactClass = "Router";
   let make = (children) =>
@@ -42,6 +64,12 @@ module Switch = {
   [@bs.module "react-router-dom"] external _switch : ReasonReact.reactClass = "Switch";
   let make = (children) =>
     ReasonReact.wrapJsForReason(~reactClass=_switch, ~props=Js.Obj.empty(), children);
+};
+
+module Link = {
+  [@bs.module "react-router-dom"] external link : ReasonReact.reactClass = "Link";
+  let make = (~_to, children) =>
+    ReasonReact.wrapJsForReason(~reactClass=link, ~props={"to": _to}, children);
 };
 
 module NavLink = {
@@ -82,28 +110,6 @@ module Redirect = {
     ReasonReact.wrapJsForReason(
       ~reactClass=redirect,
       ~props={"to": _to, "from": Js.Nullable.from_opt(from)},
-      children
-    );
-};
-
-module Route = {
-  [@bs.module "react-router-dom"] external route : ReasonReact.reactClass = "Route";
-  let make =
-      (
-        ~component: option(('a => ReasonReact.reactElement))=?,
-        ~exact: option(bool)=?,
-        ~path: option(string)=?,
-        ~render: option(renderFunc)=?,
-        children
-      ) =>
-    ReasonReact.wrapJsForReason(
-      ~reactClass=route,
-      ~props={
-        "exact": Js.Boolean.to_js_boolean(optionToBool(exact)),
-        "path": Js.Nullable.from_opt(path),
-        "component": Js.Nullable.from_opt(component),
-        "render": Js.Nullable.from_opt(render)
-      },
       children
     );
 };
