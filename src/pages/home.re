@@ -1,23 +1,23 @@
 [@bs.module] external gql : ReasonApolloTypes.gql = "graphql-tag";
 
-/* Describe the result type */
-type episode = {. "id": string, "title": string};
-
-type data = {. "episode": episode};
-
 /* Write graphql query */
 let query =
   [@bs]
   gql(
     {|
-    query episode($id: ID) {
-      episode: Episode (id: $id) {
-        id
-        title
-      }
+  query episode($id: ID) {
+    episode: Episode (id: $id) {
+      id
+      title
     }
-  |}
+  }
+|}
   );
+
+/* Describe the result type */
+type episode = {. "id": string, "title": string};
+
+type data = {. "episode": episode};
 
 let variables = {"id": "cixm6eovajibk0180k40rcoja"};
 
@@ -42,15 +42,18 @@ let make = (_children) => {
       <FetchEpisode query variables>
         (
           (response) =>
-            response##loading ?
-              <div> (ReasonReact.stringToElement("Loading")) </div> :
+            switch response {
+            | Loading => <div> (ReasonReact.stringToElement("Loading")) </div>
+            | Failed(error) => <div> (ReasonReact.stringToElement(error)) </div>
+            | Loaded(result) =>
               <div>
                 <Episode
-                  key=response##data##episode##id
-                  id=response##data##episode##id
-                  title=response##data##episode##title
+                  key=result##episode##id
+                  id=result##episode##id
+                  title=result##episode##title
                 />
               </div>
+            }
         )
       </FetchEpisode>
     </View>

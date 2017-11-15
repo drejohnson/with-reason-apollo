@@ -1,20 +1,19 @@
 [@bs.module] external gql : ReasonApolloTypes.gql = "graphql-tag";
 
+/* Write graphql query */
+let query = [@bs] gql({|
+query allEpisodes {
+  allEpisodes {
+    id
+    title
+  }
+}
+|});
+
 /* Describe the result type */
 type episodes = {. "id": string, "title": string};
 
 type data = {. "allEpisodes": array(episodes)};
-
-/* Write graphql query */
-let query =
-  [@bs] gql({|
-  query allEpisodes {
-    allEpisodes {
-      id
-      title
-    }
-  }
- |});
 
 /* Pass the return type of the query to a module containing a type named `responseType` */
 module Config = {
@@ -37,18 +36,21 @@ let make = (_children) => {
       <FetchEpisodes query>
         (
           (response) =>
-            response##loading ?
-              <div> (ReasonReact.stringToElement("Loading")) </div> :
+            switch response {
+            | Loading => <div> (ReasonReact.stringToElement("Loading")) </div>
+            | Failed(error) => <div> (ReasonReact.stringToElement(error)) </div>
+            | Loaded(result) =>
               <div>
                 (
                   ReasonReact.arrayToElement(
                     Array.map(
                       (episode) => <Episode key=episode##id id=episode##id title=episode##title />,
-                      response##data##allEpisodes
+                      result##allEpisodes
                     )
                   )
                 )
               </div>
+            }
         )
       </FetchEpisodes>
     </View>
