@@ -7,6 +7,6 @@ let make = (~style=?, ~id, ~title, _children) => {
   render: (_self) =>
     <View ?style>
       <h1> (ReasonReact.stringToElement(title)) </h1>
-      <NavLink _to={j|/about/$id|j}> (ReasonReact.stringToElement(title)) </NavLink>
+      <NavLink _to={j|/display/$id|j}> (ReasonReact.stringToElement(title)) </NavLink>
     </View>
 };

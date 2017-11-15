@@ -1,8 +1,10 @@
 open ReactRouter;
 
-let renderHome = (_) => <Home />;
+let renderHome = (jsProps) => <Home _match=jsProps##_match />;
 
 let renderAbout = (_) => <About />;
+
+let renderDisplay = (jsProps) => <Display _match=jsProps##_match />;
 
 let renderNotFound = (_) => <NotFound />;
 
@@ -18,7 +20,8 @@ let make = (_children) => {
             <Header />
             <Switch>
               <Route path="/" exact=true component=renderHome />
-              <Route path="/about" component=renderAbout />
+              <Route path="/about" exact=true component=renderAbout />
+              <Route path="/display/:id" exact=true component=renderDisplay />
               <Route component=renderNotFound />
             </Switch>
           </div>,

@@ -2,44 +2,40 @@
 
 /* Write graphql query */
 let query =
-  [@bs]
-  gql(
-    {|
-  query episode($id: ID) {
-    episode: Episode (id: $id) {
+  [@bs] gql({|
+  query allEpisodes {
+    allEpisodes {
       id
       title
     }
   }
-|}
-  );
+  |});
 
 /* Describe the result type */
-type episode = {. "id": string, "title": string};
+type episodes = {. "id": string, "title": string};
 
-type data = {. "episode": episode};
+type data = {. "allEpisodes": array(episodes)};
 
-let variables = {"id": "cixm6eovajibk0180k40rcoja"};
-
-/* Pass the above information to the Apollo Client */
+/* Pass the return type of the query to a module containing a type named `responseType` */
 module Config = {
   type responseType = data;
-  type variables = {. "id": string};
+  type variables;
 };
 
 /* You can now use it as a JSX call */
-module FetchEpisode = Apollo.Client(Config);
+module FetchEpisodes = Apollo.Client(Config);
 
 let text = ReasonReact.stringToElement;
 
 let component = ReasonReact.statelessComponent("Home");
 
-let make = (_children) => {
+let make = (~_match, _children) => {
   ...component,
-  render: (_self) =>
+  render: (_self) => {
+    Js.log(_match##params##id);
     <View>
       <Hello message="Hello from home component" />
-      <FetchEpisode query variables>
+      <FetchEpisodes query>
         (
           (response) =>
             switch response {
@@ -47,14 +43,18 @@ let make = (_children) => {
             | Failed(error) => <div> (ReasonReact.stringToElement(error)) </div>
             | Loaded(result) =>
               <div>
-                <Episode
-                  key=result##episode##id
-                  id=result##episode##id
-                  title=result##episode##title
-                />
+                (
+                  ReasonReact.arrayToElement(
+                    Array.map(
+                      (episode) => <Episode key=episode##id id=episode##id title=episode##title />,
+                      result##allEpisodes
+                    )
+                  )
+                )
               </div>
             }
         )
-      </FetchEpisode>
+      </FetchEpisodes>
     </View>
+  }
 };
